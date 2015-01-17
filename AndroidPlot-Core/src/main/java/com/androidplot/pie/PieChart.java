@@ -91,6 +91,7 @@ public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer> {
 
     public void addSegment(Segment segment, SegmentFormatter formatter) {
         addSeries(segment, formatter);
+        redraw();
     }
 
     public void removeSegment(Segment segment) {

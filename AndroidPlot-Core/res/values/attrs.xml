@@ -19,6 +19,7 @@
     <declare-styleable name="Plot">
         <attr name="plotLabel" format="string"/>
         <attr name="plotLabelTextSize" format="dimension"/>
+        <attr name="animated" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="xy.XYPlot" parent="@style/Plot">

@@ -17,6 +17,9 @@
 package com.androidplot.pie;
 
 import android.graphics.*;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.SeriesRenderer;
@@ -48,6 +51,40 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
     	return  rect.width() < rect.height() ? rect.width() / 2 : rect.height() / 2;
     }
 
+    class RenderHelper implements Runnable {
+        private Canvas canvas;
+        private RectF rec;
+        private Segment seg;
+        private SegmentFormatter segfault;
+        private float radius;
+        private float lastOffset;
+        private float sweep;
+        public RenderHelper(Canvas canvas, RectF bounds, Segment seg, SegmentFormatter f,
+                            float rad, float startAngle, float sweep) {
+            this.canvas = canvas;
+            this.rec = bounds;
+            this.seg = seg;
+            this.segfault = f;
+            this.radius = rad;
+            this.lastOffset = startAngle;
+            this.sweep = sweep;
+        }
+
+        long lastUpdateTime = System.currentTimeMillis();
+        long ticks = 0;
+        @Override
+        public void run() {
+            Log.e("doge", "woof");
+            while (ticks <= 60) {
+                long currentTime = System.currentTimeMillis();
+                if (currentTime - lastUpdateTime >= 1/15.0 * 1000) {
+                    drawSegment(canvas, rec, seg, segfault,
+                            radius, lastOffset, sweep/60 * ++ticks);
+                }
+            }
+        }
+    }
+
     @Override
     public void onRender(Canvas canvas, RectF plotArea) throws PlotRenderException {
 
@@ -67,10 +104,10 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
         for (Segment segment : segments) {
             float lastOffset = offset;
             float sweep = (float) (scale * (values[i]) * 360);
+            SegmentFormatter tipo = getPlot().getFormatter(segment, getClass());
             offset += sweep;
             //PointF radial = calculateLineEnd(origin, radius, offset);
-            drawSegment(canvas, rec, segment, getPlot().getFormatter(segment, getClass()),
-                    radius, lastOffset, sweep);
+            new Handler(Looper.getMainLooper()).post(new RenderHelper(canvas, rec, segment, tipo, radius, lastOffset, sweep));
             //lastRadial = radial;
             i++;
         }
@@ -98,12 +135,12 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
         // do we have a pie chart of less than 100%
         if(Math.abs(sweep - 360f) > Float.MIN_VALUE) {
             // vertices of the first radial:
-            PointF r1Outer = calculateLineEnd(cx, cy, rad, startAngle);
-            PointF r1Inner = calculateLineEnd(cx, cy, donutSizePx, startAngle);
+            final PointF r1Outer = calculateLineEnd(cx, cy, rad, startAngle);
+            final PointF r1Inner = calculateLineEnd(cx, cy, donutSizePx, startAngle);
 
             // vertices of the second radial:
-            PointF r2Outer = calculateLineEnd(cx, cy, rad, startAngle + sweep);
-            PointF r2Inner = calculateLineEnd(cx, cy, donutSizePx, startAngle + sweep);
+            final PointF r2Outer = calculateLineEnd(cx, cy, rad, startAngle + sweep);
+            final PointF r2Inner = calculateLineEnd(cx, cy, donutSizePx, startAngle + sweep);
 
             Path clip = new Path();
 

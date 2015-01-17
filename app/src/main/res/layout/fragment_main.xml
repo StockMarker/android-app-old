@@ -3,8 +3,8 @@
     android:layout_height="match_parent" tools:context="me.stockmarker.stockmarker.MainFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <com.androidplot.xy.XYPlot
-        android:id="@+id/mySimpleXYPlot"
+    <com.androidplot.pie.PieChart
+        android:id="@+id/plot"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         androidPlot.title="A Simple XY Plot"
@@ -16,16 +16,10 @@
         androidPlot.graphWidget.marginTop="20dp"
         androidPlot.graphWidget.marginLeft="15dp"
         androidPlot.graphWidget.marginBottom="25dp"
-        androidPlot.graphWidget.marginRight="10dp"
-        androidPlot.graphWidget.rangeLabelPaint.textSize="10dp"
-        androidPlot.graphWidget.rangeOriginLabelPaint.textSize="10dp"
-        androidPlot.graphWidget.domainLabelPaint.textSize="10dp"
-        androidPlot.graphWidget.domainOriginLabelPaint.textSize="10dp"
-        androidPlot.legendWidget.textPaint.textSize="10dp"
-        androidPlot.legendWidget.iconSizeMetrics.heightMetric.value="15dp"
-        androidPlot.legendWidget.iconSizeMetrics.widthMetric.value="15dp"
-        androidPlot.legendWidget.heightMetric.value="25dp"
-        androidPlot.legendWidget.positionMetrics.anchor="right_bottom"
-        androidPlot.graphWidget.gridLinePaint.color="#000000"/>
-
+        androidPlot.graphWidget.marginRight="10dp"/>
+    <Button
+        android:id="@+id/the_button"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="lol"/>
 </FrameLayout>
